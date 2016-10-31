@@ -1,0 +1,14 @@
+[Unit]
+Description=oc-service daemon
+
+[Service]
+PIDFile=/var/run/oc-service.pid
+WorkingDirectory=/usr/lib/systemd/system
+ExecStart=/usr/lib/systemd/system/oc-service start
+ExecStop=/usr/lib/systemd/system/oc-service stop 
+Type=notify
+NotifyAccess=all
+Type=forking
+
+[Install]
+WantedBy=multi-user.target

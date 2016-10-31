@@ -1,0 +1,75 @@
+#!/bin/bash
+#
+# This shell script takes care of starting and stopping oc-service
+#
+# chkconfig: - 15 85
+# description: oc-service
+
+### BEGIN INIT INFO
+# Provides: oc-service
+# Required-Start: $network $local_fs $remote_fs
+# Required-Stop: $network $local_fs $remote_fs
+# Should-Start: $syslog
+# Should-Stop: $syslog
+# Short-Description: Start and Stop oc-service
+# Description: Start and Stop oc-service
+### END INIT INFO
+
+# Source function library.
+. /etc/init.d/functions
+
+# Source networking configuration.
+
+PIDFILE=/var/run/oc-service.pid
+OSGI_HOME="/usr/lib/python2.7/site-packages/oc"
+
+
+start() {
+    cd ${OSGI_HOME}
+    echo -n $"Starting oc-service : "
+ 
+    setsid /usr/bin/python /usr/lib/python2.7/site-packages/oc/oc_service.py &
+
+    RETVAL=$?
+    echo
+    [ $RETVAL -eq 0 ] && PID=$(ps -ef | grep oc_service.py | grep -v grep | awk '{print $2}') && echo ${PID} > ${PIDFILE}
+    return $RETVAL
+}
+
+stop() {
+    echo -n $"Shutting down oc-service : "
+    killproc -p ${PIDFILE}
+    RETVAL=$?
+    echo
+    [ $RETVAL -eq 0 ] && rm -f ${PIDFILE}
+ 
+    return $RETVAL
+}
+
+case "$1" in
+    start)
+        start
+        ;;
+    stop)
+        stop
+        ;;
+    status)
+        status -p ${PIDFILE}
+        ;;
+    restart|force-reload)
+        stop
+        start
+        ;;
+    try-restart|condrestart)
+        if status -p ${PIDFILE} > /dev/null; then
+            stop
+            start
+        fi
+        ;;
+    reload)
+        exit 3
+        ;;
+    *)
+                echo $"Usage: $0 {start|stop|status|restart|try-restart|force-reload}"
+                exit 2
+esac

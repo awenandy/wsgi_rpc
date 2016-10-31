@@ -1,0 +1,4 @@
+#!/bin/bash
+cd /usr/lib/python2.7/site-packages/oc
+ 
+python oc_utils.py $1 $2 $3 $4
