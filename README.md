@@ -29,4 +29,6 @@ query_all_data_from_cache
 8.	数据持久化
 /usr/lib/python2.7/site-packages/oc/cache.db是持久化数据， 重启机器后，会再次加载以前的数据。新增加数据之后，会自动添加到数据库里面，进行持久化保存。
 
-{"jsonrpc":"2.0", "method":"add_data_to_cache","id":"test",'params':{'key':"aaa",'value':"111"}} 
+{"jsonrpc":"2.0", "method":"add_data_to_cache","id":"test","params":{"key":"aaa","value":"111"}} 
+{"jsonrpc":"2.0", "method":"query_all_data_from_cache","id":"test","params":{}} 
+
